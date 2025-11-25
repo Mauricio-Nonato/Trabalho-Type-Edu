@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza & Taste | Delivery</title>
+    <style>
+        :root { --primary-color: #b71c1c; --secondary-color: #2e7d32; --bg-color: #f5f5f5; --text-color: #333; --card-bg: #ffffff; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-color); scroll-behavior: smooth; }
+
+        /* Header */
+        header { background-color: var(--primary-color); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 1000; }
+        .brand { display: flex; align-items: center; gap: 15px; color: white; font-size: 24px; font-weight: bold; text-decoration: none; }
+        .logo-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background-color: white; }
+        nav a { color: white; text-decoration: none; font-weight: 600; margin-left: 20px; font-size: 14px; text-transform: uppercase; cursor: pointer; }
+        .user-area { color: #ffccbc; font-weight: bold; margin-right: 15px; }
+        .cart-badge { background-color: var(--secondary-color); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; position: relative; top: -8px; margin-left: 5px; }
+
+        /* Hero */
+        .hero { text-align: center; padding: 80px 20px; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); background-size: cover; color: white; }
+        .hero h1 { font-size: 3.5rem; margin: 0 0 10px 0; }
+        .btn-cta { background-color: var(--secondary-color); color: white; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; display: inline-block; }
+
+        /* Cardápio */
+        main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .categoria-titulo { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); display: inline-block; padding-bottom: 5px; margin-bottom: 25px; font-size: 1.8rem; margin-top: 40px; }
+        .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .card-produto { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); display: flex; flex-direction: column; transition: transform 0.3s; }
+        .card-produto:hover { transform: translateY(-5px); }
+        .img-container { width: 100%; height: 200px; overflow: hidden; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Placeholder (Ajustado para TEXTO em vez de Emoji gigante) */
+        .placeholder-icon { 
+            width: 100%; height: 100%; 
+            display: flex; justify-content: center; align-items: center; 
+            font-size: 1.5rem; /* Fonte menor para caber o texto */
+            font-weight: bold; 
+            letter-spacing: 2px; 
+            color: rgba(0,0,0,0.4); 
+        }
+        .bg-pizza { background-color: #fff3e0; } .bg-bebida { background-color: #e3f2fd; } .bg-doce { background-color: #fce4ec; }
+        
+        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { font-size: 1.2rem; font-weight: bold; color: var(--primary-color); margin-bottom: 5px; }
+        .card-desc { font-size: 0.9rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
+        .card-footer { margin-top: auto; }
+        
+        .tamanho-select { width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ddd; }
+        .card-price { font-size: 1.4rem; font-weight: 800; color: var(--secondary-color); margin-bottom: 10px; display: block; }
+        .btn-add { background-color: var(--primary-color); color: white; border: none; width: 100%; padding: 10px; border-radius: 6px; font-size: 1rem; cursor: pointer; font-weight: bold; }
+        .btn-add:hover { background-color: #7f0000; }
+
+        /* Modal Carrinho/Rastreio */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: flex-end; z-index: 2000; }
+        .modal-sidebar { background-color: white; width: 400px; height: 100%; padding: 20px; display: flex; flex-direction: column; box-shadow: -5px 0 15px rgba(0,0,0,0.2); animation: slideIn 0.3s; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        .carrinho-view, .rastreio-view { display: none; flex-direction: column; height: 100%; }
+        
+        /* Timeline do Rastreio */
+        .rastreio-header { text-align: center; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .tempo-entrega { font-size: 40px; font-weight: 800; color: #333; margin: 10px 0; display: block; }
+        .status-label { font-size: 18px; font-weight: bold; color: var(--secondary-color); margin-bottom: 20px; display: block; }
+        
+        .timeline { margin-top: 20px; padding-left: 20px; border-left: 2px solid #eee; margin-left: 20px; }
+        .timeline-item { position: relative; margin-bottom: 30px; padding-left: 15px; }
+        .timeline-dot { width: 14px; height: 14px; background: #ddd; border-radius: 50%; position: absolute; left: -28px; top: 5px; border: 2px solid white; box-shadow: 0 0 0 2px #ddd; transition: all 0.3s; }
+        .timeline-item h4 { margin: 0; font-size: 16px; color: #999; }
+        .timeline-item p { margin: 5px 0 0; font-size: 12px; color: #bbb; }
+
+        /* Status Ativo na Timeline */
+        .timeline-item.active .timeline-dot { background: var(--secondary-color); box-shadow: 0 0 0 2px var(--secondary-color); }
+        .timeline-item.active h4 { color: #333; font-weight: bold; }
+        .timeline-item.active p { color: #666; }
+
+        /* Footer Carrinho */
+        .carrinho-footer { margin-top: auto; border-top: 1px solid #ddd; padding-top: 15px; }
+        .btn-finalizar { width: 100%; background: var(--secondary-color); color: white; padding: 15px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; border-radius: 5px; }
+        .item-carrinho { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; }
+        .btn-remove { color: red; border: none; background: none; cursor: pointer; font-weight: bold; font-size: 16px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 12px; font-weight: bold; }
+        .form-group input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="brand">
+            <img src="img/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+            <span>Pizza & Taste</span>
+        </a>
+        <nav>
+            <span id="user-display" style="display:none;">
+                <span id="msg-ola" class="user-area"></span>
+                <a onclick="fazerLogout()">SAIR</a>
+            </span>
+            <span id="guest-display"><a href="login.html">ENTRAR</a></span>
+            <a href="login-proprietario.html">Sou Dono</a>
+            <a class="cart-link" onclick="abrirPainelDireito()">Meu Pedido <span class="cart-badge" id="cart-count">0</span></a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h1>Fome de Pizza?</h1>
+        <p>A melhor massa artesanal da cidade entregue na sua porta.</p>
+        <a href="#cardapio" class="btn-cta">VER CARDÁPIO</a>
+    </div>
+
+    <main id="cardapio">
+        <div id="loading-msg" style="text-align: center; padding: 40px;"><h2>Carregando delícias...</h2></div>
+        <div id="menu-container"></div>
+    </main>
+
+    <div class="modal-overlay" id="painelLateral">
+        <div class="modal-sidebar">
+            
+            <div id="viewCarrinho" class="carrinho-view">
+                <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                    <h2>Seu Pedido</h2>
+                    <button onclick="fecharPainel()" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+                </div>
+                <div id="lista-itens" style="flex-grow:1; overflow-y:auto;"></div>
+                <div class="carrinho-footer">
+                    <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:bold; margin-bottom:15px;">
+                        <span>Total:</span><span id="total-valor">R$ 0,00</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Entrega</label>
+                        <select id="tipoEntrega" onchange="toggleEndereco()">
+                            <option value="Entrega">Entrega (Delivery)</option>
+                            <option value="Retirada">Retirada</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="divEndereco">
+                        <label>Endereço</label>
+                        <input type="text" id="enderecoInput" placeholder="Rua, Nº, Bairro">
+                    </div>
+                    <div class="form-group">
+                        <label>Pagamento</label>
+                        <select id="formaPagamento">
+                            <option value="Pix">Pix</option>
+                            <option value="Cartão">Cartão</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                        </select>
+                    </div>
+                    <button class="btn-finalizar" onclick="finalizarPedido()">FINALIZAR PEDIDO</button>
+                </div>
+            </div>
+
+            <div id="viewRastreio" class="rastreio-view">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:10px; border-bottom:1px solid #eee;">
+                    <h2>Acompanhar</h2>
+                    <button onclick="fecharPainel()" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+                </div>
+                
+                <div style="text-align:center; padding:20px 0;">
+                    <small>PREVISÃO DE ENTREGA</small>
+                    <span class="tempo-entrega" id="hora-entrega">--:--</span>
+                    <span class="status-label" id="status-texto">Carregando...</span>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item" id="step-aberto">
+                        <div class="timeline-dot"></div>
+                        <h4>Recebido</h4>
+                        <p>Aguardando confirmação da cozinha.</p>
+                    </div>
+                    <div class="timeline-item" id="step-preparo">
+                        <div class="timeline-dot"></div>
+                        <h4>Em Preparo</h4>
+                        <p>Sua pizza está sendo preparada.</p>
+                    </div>
+                    <div class="timeline-item" id="step-entrega">
+                        <div class="timeline-dot"></div>
+                        <h4>Saiu para Entrega</h4>
+                        <p>O entregador está a caminho.</p>
+                    </div>
+                    <div class="timeline-item" id="step-concluido">
+                        <div class="timeline-dot"></div>
+                        <h4>Entregue</h4>
+                        <p>Pedido finalizado com sucesso.</p>
+                    </div>
+                </div>
+
+                <div style="margin-top:auto; text-align:center;">
+                    <button onclick="mostrarCarrinho()" style="background:none; border:none; text-decoration:underline; cursor:pointer; color:#666;">Voltar para o Carrinho</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:4000';
+        let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            verificarLogin();
+            carregarCardapio();
+            atualizarBadge();
+            toggleEndereco();
+        });
+
+        // --- LÓGICA INTELIGENTE: Carrinho ou Rastreio? ---
+        async function abrirPainelDireito() {
+            const modal = document.getElementById('painelLateral');
+            modal.style.display = 'block';
+
+            if (carrinho.length > 0) {
+                mostrarCarrinho();
+                return;
+            }
+
+            const user = localStorage.getItem('clienteUser');
+            if (user) {
+                try {
+                    const res = await fetch(`${API_URL}/pedidos/ultimo/${user}`);
+                    const pedido = await res.json();
+
+                    if (pedido && pedido.status !== 'Cancelado') {
+                        mostrarRastreio(pedido);
+                    } else {
+                        mostrarCarrinho();
+                    }
+                } catch (e) {
+                    mostrarCarrinho();
+                }
+            } else {
+                mostrarCarrinho();
+            }
+        }
+
+        function mostrarCarrinho() {
+            document.getElementById('viewCarrinho').style.display = 'flex';
+            document.getElementById('viewRastreio').style.display = 'none';
+            renderizarCarrinho();
+        }
+
+        function mostrarRastreio(pedido) {
+            document.getElementById('viewCarrinho').style.display = 'none';
+            document.getElementById('viewRastreio').style.display = 'flex';
+            
+            const dataPed = new Date(pedido.data_pedido);
+            dataPed.setMinutes(dataPed.getMinutes() + 45);
+            const hora = dataPed.getHours().toString().padStart(2,'0') + ':' + dataPed.getMinutes().toString().padStart(2,'0');
+            document.getElementById('hora-entrega').innerText = hora;
+            
+            const txtStatus = document.getElementById('status-texto');
+            txtStatus.innerText = pedido.status;
+
+            const status = pedido.status; 
+            ['aberto', 'preparo', 'entrega', 'concluido'].forEach(id => document.getElementById(`step-${id}`).classList.remove('active'));
+            
+            let nivel = 0;
+            if (status === 'Aberto') nivel = 1;
+            if (status === 'Em Preparo') nivel = 2;
+            if (status === 'Saiu para Entrega') nivel = 3;
+            if (status === 'Concluído') nivel = 4;
+
+            if(nivel >= 1) document.getElementById('step-aberto').classList.add('active');
+            if(nivel >= 2) document.getElementById('step-preparo').classList.add('active');
+            if(nivel >= 3) document.getElementById('step-entrega').classList.add('active');
+            if(nivel >= 4) document.getElementById('step-concluido').classList.add('active');
+        }
+
+        function fecharPainel() { document.getElementById('painelLateral').style.display = 'none'; }
+
+        // --- MENU E CARRINHO ---
+        async function carregarCardapio() {
+            try {
+                const res = await fetch(`${API_URL}/produtos`);
+                const produtos = await res.json();
+                const container = document.getElementById('menu-container');
+                document.getElementById('loading-msg').style.display = 'none';
+
+                if (produtos.length === 0) { container.innerHTML = '<h3 style="text-align:center;">Cardápio vazio.</h3>'; return; }
+
+                const categorias = {
+                    'Pizzas Salgadas': produtos.filter(p => p.tipo_produto === 'Pizza Salgada'),
+                    'Pizzas Doces': produtos.filter(p => p.tipo_produto === 'Pizza Doce'),
+                    'Bebidas': produtos.filter(p => ['Refrigerante', 'Suco'].includes(p.tipo_produto)),
+                    'Sobremesas': produtos.filter(p => p.tipo_produto === 'Sobremesas')
+                };
+
+                for (const [titulo, itens] of Object.entries(categorias)) {
+                    if (itens.length > 0) {
+                        let html = `<div class="categoria-titulo">${titulo}</div><div class="grid-produtos">`;
+                        itens.forEach(prod => {
+                            let controlesHTML = '';
+                            let precoShow = prod.preco;
+                            
+                            if(prod.tem_grande && prod.tem_broto) {
+                                controlesHTML = `
+                                    <select id="sel-${prod.cod_produto}" class="tamanho-select" onchange="updPreco(${prod.cod_produto}, ${prod.preco}, ${prod.preco_broto})">
+                                        <option value="Grande">Grande (8 Fat)</option>
+                                        <option value="Broto">Broto (4 Fat)</option>
+                                    </select>`;
+                            } else if (!prod.tem_grande && prod.tem_broto) {
+                                precoShow = prod.preco_broto;
+                                controlesHTML = `<div style="font-size:12px; color:#666; margin-bottom:5px;">Tamanho Único (Broto)</div>`;
+                            } else {
+                                controlesHTML = `<div style="height:20px;"></div>`;
+                            }
+
+                            html += `
+                                <div class="card-produto">
+                                    <div class="img-container">${gerarImg(prod)}</div>
+                                    <div class="card-content">
+                                        <div class="card-title">${prod.nome}</div>
+                                        <div class="card-desc">${prod.descricao||''}</div>
+                                        <div class="card-footer">
+                                            ${controlesHTML}
+                                            <span class="card-price" id="pr-${prod.cod_produto}">R$ ${precoShow.toFixed(2)}</span>
+                                            <button class="btn-add" onclick="addCarrinhoSelect(${prod.cod_produto}, '${prod.nome}', ${prod.preco}, ${prod.preco_broto})">ADICIONAR</button>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        });
+                        container.innerHTML += html + `</div>`;
+                    }
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function gerarImg(prod) {
+            if (prod.imagem) return `<img src="${prod.imagem}" alt="${prod.nome}">`;
+            
+            // TEXTO NO LUGAR DE EMOJI
+            let texto = 'PIZZA';
+            let bg = 'bg-pizza';
+            if (prod.tipo_produto.includes('Suco')||prod.tipo_produto.includes('Refrigerante')) { texto='BEBIDA'; bg='bg-bebida'; }
+            else if (prod.tipo_produto.includes('Doce')||prod.tipo_produto.includes('Sobremesa')) { texto='DOCE'; bg='bg-doce'; }
+            
+            return `<div class="placeholder-icon ${bg}">${texto}</div>`;
+        }
+
+        function updPreco(id, pG, pB) {
+            const sel = document.getElementById(`sel-${id}`);
+            const show = document.getElementById(`pr-${id}`);
+            if(sel.value === 'Broto') { show.innerText = `R$ ${pB.toFixed(2)}`; show.style.color='#e65100'; }
+            else { show.innerText = `R$ ${pG.toFixed(2)}`; show.style.color='#2e7d32'; }
+        }
+
+        function addCarrinhoSelect(id, nome, pG, pB) {
+            const sel = document.getElementById(`sel-${id}`);
+            let tam = 'Grande';
+            let preco = pG;
+
+            if(sel) {
+                tam = sel.value;
+                if(tam==='Broto') preco = pB;
+            } else if (pG === 0 && pB > 0) {
+                tam = 'Broto'; preco = pB;
+            }
+
+            if(!sel && pG > 0 && pB === 0) {
+                carrinho.push({ id, nome: nome, preco });
+            } else {
+                carrinho.push({ id, nome: `${nome} (${tam})`, preco });
+            }
+            
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            atualizarBadge();
+            
+            const btn = document.querySelector('.cart-link');
+            btn.style.color = "var(--secondary-color)"; 
+            setTimeout(()=>btn.style.color = "white", 300);
+        }
+
+        function toggleEndereco() { document.getElementById('divEndereco').style.display = document.getElementById('tipoEntrega').value === 'Entrega' ? 'block' : 'none'; }
+        function verificarLogin() { 
+            const nome = localStorage.getItem('clienteNome'); 
+            if(nome) { document.getElementById('guest-display').style.display='none'; document.getElementById('user-display').style.display='inline'; document.getElementById('msg-ola').innerText=`Olá, ${nome.split(' ')[0]}`; }
+            else { document.getElementById('guest-display').style.display='inline'; document.getElementById('user-display').style.display='none'; }
+        }
+        function fazerLogout() { localStorage.clear(); window.location.reload(); }
+        function atualizarBadge() { document.getElementById('cart-count').innerText = carrinho.length; }
+        
+        function renderizarCarrinho() {
+            const lista = document.getElementById('lista-itens');
+            const totalEl = document.getElementById('total-valor');
+            if (carrinho.length === 0) { lista.innerHTML = '<p style="text-align:center;margin-top:40px;color:#888;">Carrinho vazio.</p>'; totalEl.innerText='R$ 0,00'; return; }
+            lista.innerHTML = ''; let total = 0;
+            carrinho.forEach((item, idx) => {
+                total += item.preco;
+                lista.innerHTML += `<div class="item-carrinho"><div><strong>${item.nome}</strong><br>R$ ${item.preco.toFixed(2)}</div><button class="btn-remove" onclick="removerItem(${idx})">X</button></div>`;
+            });
+            totalEl.innerText = `R$ ${total.toFixed(2)}`;
+        }
+        function removerItem(idx) { carrinho.splice(idx,1); localStorage.setItem('carrinho', JSON.stringify(carrinho)); renderizarCarrinho(); atualizarBadge(); }
+        
+        async function finalizarPedido() {
+            if (carrinho.length === 0) return alert("Carrinho vazio!");
+            const user = localStorage.getItem('clienteUser');
+            if (!user) { alert("Faça login!"); window.location.href='login.html'; return; }
+            const tipo = document.getElementById('tipoEntrega').value;
+            const end = document.getElementById('enderecoInput').value;
+            const pag = document.getElementById('formaPagamento').value;
+            const total = carrinho.reduce((s, i) => s + i.preco, 0);
+            if (tipo === 'Entrega' && !end) return alert("Digite o endereço!");
+
+            const payload = {
+                pedido: { username_cliente: user, tipo_entrega: tipo, forma_pagamento: pag, preco_total: total, observacao: "Site", endereco_entrega: tipo==='Entrega'?end:'Retirada' },
+                itens: carrinho.map(i => ({ cod_produto: i.id, nome_produto: i.nome, quantidade: 1, preco_unitario: i.preco, tamanho_selecionado: "Padrão" }))
+            };
+            try {
+                const res = await fetch(`${API_URL}/pedidos`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+                if (res.ok) { 
+                    alert("Pedido Enviado!"); 
+                    carrinho = []; localStorage.setItem('carrinho', JSON.stringify(carrinho)); 
+                    atualizarBadge(); 
+                    abrirPainelDireito();
+                }
+                else { alert("Erro ao enviar."); }
+            } catch (e) { alert("Erro de conexão."); }
+        }
+        window.onclick = (e) => { if(e.target == document.getElementById('painelLateral')) fecharPainel(); }
+    </script>
+</body>
+</html>

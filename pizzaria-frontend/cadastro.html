@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - Pizza & Taste</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 350px; }
+        h2 { color: #b71c1c; text-align: center; margin-bottom: 20px; }
+        input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #b71c1c; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background-color: #921616; }
+        a { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Crie sua Conta 🍕</h2>
+        <form onsubmit="cadastrar(event)">
+            <input type="text" id="nome" placeholder="Nome Completo" required>
+            <input type="text" id="username" placeholder="Nome de Usuário (Login)" required>
+            <input type="email" id="email" placeholder="E-mail" required>
+            <input type="tel" id="celular" placeholder="Celular (WhatsApp)" required>
+            <input type="password" id="senha" placeholder="Crie uma Senha" required minlength="4">
+            
+            <button type="submit">CADASTRAR</button>
+        </form>
+        <a href="login.html">Já tem conta? Faça Login</a>
+    </div>
+
+    <script>
+        async function cadastrar(e) {
+            e.preventDefault();
+            
+            const dados = {
+                nome: document.getElementById('nome').value,
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                celular: document.getElementById('celular').value,
+                password: document.getElementById('senha').value
+            };
+
+            try {
+                const response = await fetch('http://localhost:4000/clientes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                });
+
+                if (response.ok) {
+                    alert("Conta criada com sucesso! Agora faça login.");
+                    window.location.href = 'login.html';
+                } else {
+                    const err = await response.json();
+                    alert("Erro: " + (err.error || "Falha ao cadastrar"));
+                }
+            } catch (error) {
+                alert("Erro de conexão com o servidor.");
+            }
+        }
+    </script>
+</body>
+</html>

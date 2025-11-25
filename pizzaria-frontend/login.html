@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Pizza & Taste</title>
+    <style>
+        :root {
+            --primary-color: #b71c1c;
+            --primary-dark: #7f0000;
+            --secondary-color: #2e7d32;
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .container {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+        }
+
+        p.subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #1b5e20;
+        }
+
+        .links {
+            margin-top: 25px;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .links a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .links a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        
+        .error-msg {
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Bem-vindo!</h2>
+        <p class="subtitle">Faça login para pedir sua pizza.</p>
+        
+        <form onsubmit="fazerLogin(event)">
+            <input type="text" id="loginInput" placeholder="Usuário ou E-mail" required>
+            <input type="password" id="senha" placeholder="Sua Senha" required>
+            
+            <button type="submit">ENTRAR</button>
+            
+            <div id="msgError" class="error-msg"></div>
+        </form>
+
+        <div class="links">
+            <a href="cadastro.html">Não tem conta? <strong>Cadastre-se</strong></a>
+            <a href="index.html">Voltar para o Início</a>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:4000';
+
+        async function fazerLogin(e) {
+            e.preventDefault();
+
+            const loginInput = document.getElementById('loginInput').value;
+            const password = document.getElementById('senha').value;
+            const msgError = document.getElementById('msgError');
+            
+            // Limpa erro anterior
+            msgError.style.display = 'none';
+            msgError.innerText = '';
+
+            try {
+                const response = await fetch(`${API_URL}/clientes/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: loginInput, password: password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Salva os dados
+                    localStorage.setItem('clienteToken', data.token);
+                    localStorage.setItem('clienteNome', data.user.nome);
+                    localStorage.setItem('clienteUser', data.user.username);
+
+                    // Redireciona
+                    window.location.href = 'index.html'; 
+                } else {
+                    // Mostra erro na tela (mais bonito que alert)
+                    msgError.innerText = data.error || "Login inválido";
+                    msgError.style.display = 'block';
+                }
+            } catch (error) {
+                console.error(error);
+                msgError.innerText = "Erro de conexão com o servidor.";
+                msgError.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Proprietário - Pizza & Taste</title>
+    <style>
+        :root {
+            --primary-color: #b71c1c;
+            --primary-dark: #7f0000;
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+        }
+        .login-container {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+        h2 { 
+            color: var(--primary-color); 
+            margin-bottom: 30px; 
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        button:hover { background-color: var(--primary-dark); }
+        
+        .error { 
+            color: #d32f2f; 
+            font-size: 14px; 
+            margin-top: 15px; 
+            display: none; 
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .back-link { 
+            display: block; 
+            margin-top: 20px; 
+            color: #666; 
+            text-decoration: none; 
+            font-size: 14px; 
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Área Restrita</h2>
+        <input type="text" id="username" placeholder="Usuário">
+        <input type="password" id="password" placeholder="Senha">
+        <button onclick="fazerLogin()">ENTRAR</button>
+        <p id="msgError" class="error"></p>
+        <a href="index.html" class="back-link">Voltar para o Início</a>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:4000';
+
+        async function fazerLogin() {
+            const usernameInput = document.getElementById('username').value;
+            const passwordInput = document.getElementById('password').value;
+            const msgError = document.getElementById('msgError');
+
+            // Limpa mensagens anteriores
+            msgError.style.display = 'none';
+            msgError.innerText = '';
+
+            if (!usernameInput || !passwordInput) {
+                msgError.innerText = "Preencha todos os campos.";
+                msgError.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/login/proprietario`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        username: usernameInput, 
+                        password: passwordInput 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Salva o token
+                    localStorage.setItem('tokenProprietario', data.token);
+                    window.location.href = 'painel-admin.html'; 
+                } else {
+                    msgError.innerText = data.error || "Falha ao entrar.";
+                    msgError.style.display = 'block';
+                }
+
+            } catch (error) {
+                console.error(error);
+                msgError.innerText = "Erro ao conectar com o servidor.";
+                msgError.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

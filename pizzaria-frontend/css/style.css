@@ -1,0 +1,232 @@
+/* --- RESET GLOBAL --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f8f8f8;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* --- NAVBAR GLOBAL --- */
+.header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: #B22222;
+    color: white;
+    flex-wrap: wrap;
+}
+
+.header-nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 5px 12px;
+    transition: 0.2s;
+}
+
+.header-nav a:hover {
+    color: #ffe1e1;
+}
+
+.logo-container img {
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* --- CONTAINERS DE PÁGINA --- */
+.page-container,
+.admin-page-container,
+#menu-container,
+#carrinho-container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 25px auto;
+}
+
+/* --- CARDS GENÉRICOS (para menu, admin, etc.) --- */
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    font-size: 20px;
+    color: #B22222;
+    margin-bottom: 5px;
+}
+
+/* --- ITENS DE PRODUTO (admin e cliente) --- */
+.admin-menu-item,
+.menu-item {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+    gap: 15px;
+}
+
+.admin-menu-item img,
+.menu-item img {
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-info h3 {
+    font-size: 18px;
+    margin-bottom: 4px;
+    color: #B22222;
+}
+
+.item-info p {
+    font-size: 14px;
+    margin: 3px 0;
+}
+
+/* --- PREÇO --- */
+.price {
+    font-size: 17px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* --- BOTÕES GLOBAIS --- */
+.form-button,
+.btn,
+button {
+    padding: 10px 15px;
+    background-color: #B22222;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.form-button:hover,
+.btn:hover,
+button:hover {
+    background-color: #8B1A1A;
+}
+
+/* --- CAMPOS DE FORMULÁRIOS --- */
+.form-input,
+input[type="text"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* --- GRID DE FORMULÁRIO (cidade, estado, bairro etc.) --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+}
+
+/* --- ÁREA DE IMAGEM NO ADMIN (empresa) --- */
+.empresa-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.empresa-image button {
+    width: 200px;
+}
+
+/* --- LOGIN & CADASTRO --- */
+.login-container,
+.cadastro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 85vh;
+}
+
+.login-box,
+.cadastro-box {
+    width: 360px;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+.login-box h2,
+.cadastro-box h2 {
+    margin-bottom: 15px;
+    color: #B22222;
+}
+
+.login-link,
+.cadastro-link {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.login-link a,
+.cadastro-link a {
+    color: #B22222;
+    font-weight: bold;
+}
+
+/* --- CARRINHO --- */
+#itens-carrinho .item-carrinho {
+    background: white;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin: 10px 0;
+}
+
+#itens-carrinho input {
+    padding: 6px;
+    width: 70%;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 780px) {
+    .header-nav {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .admin-menu-item,
+    .menu-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logo-container img {
+        width: 70px;
+        height: 70px;
+    }
+}
