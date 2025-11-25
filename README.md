@@ -1,54 +1,70 @@
-:
+🍕 Trabalho-Type-Edu — API de Pedidos de Pizzaria
 
-🍕 Trabalho-Type-Edu: API de Pedidos de Pizzaria
+
+
+
+
+
+
+
+
+
+
+
 📝 Descrição do Projeto
 
-O Trabalho-Type-Edu é uma API RESTful desenvolvida para simular o sistema de gerenciamento de pedidos de uma pizzaria.
-A aplicação lida com:
+O Trabalho-Type-Edu é uma API RESTful desenvolvida para simular o fluxo completo de pedidos de uma pizzaria.
+
+A aplicação contempla:
 
 Autenticação de clientes e proprietários
 
 Cadastro e gerenciamento de produtos (cardápio)
 
-Controle completo do ciclo de vida de um pedido, desde a criação até a conclusão
+Criação e atualização de pedidos
 
-O projeto foi desenvolvido como [Mencione a finalidade: Trabalho Acadêmico, Projeto Pessoal, etc.], utilizando as tecnologias Node.js, TypeScript e Express.
+Controle do status: Aberto → Em Preparo → Concluído
 
-✨ Funcionalidades da API
-🔐 Autenticação e Usuários
+Foi desenvolvida como [coloque aqui: Trabalho Acadêmico / Projeto Pessoal / Projeto de Estudo], utilizando Node.js + TypeScript + Express + SQL Server.
 
-Cadastro e Login
+✨ Funcionalidades
+🔐 Autenticação & Usuários
 
-Atualização de dados
+Cadastro e Login (Cliente e Proprietário)
 
-Perfis: Cliente e Proprietário (Admin)
+Atualização de perfis
 
-🍕 Cardápio (Produtos)
+Tokens JWT
 
-CRUD de produtos (somente Proprietários)
+🍕 Produtos (Cardápio)
 
-Listagem de produtos para Clientes
+CRUD completo (apenas Proprietário/Admin)
+
+Listagem para clientes
 
 📦 Pedidos
 
-Criação de pedido
+Criação de pedidos
 
-Consulta
+Listagem e consulta
 
-Atualização de status (Aberto → Em Preparo → Concluído)
+Alteração de status
+
+Itens detalhados (tamanho, observações, etc.)
 
 🛠 Tecnologias Utilizadas
-Categoria	Tecnologia	Uso / Dependência
-Linguagem	TypeScript	Tipagem estática e segurança
+Categoria	Tecnologia	Descrição
+Linguagem	TypeScript	Tipagem estática
 Runtime	Node.js	Ambiente de execução
-Framework Web	Express	Criação de rotas e controle HTTP
-Banco de Dados	SQL Server	Persistência via mssql
-Autenticação	JWT (jsonwebtoken)	Tokens de sessão
+Framework	Express	Rotas e HTTP
+Banco	SQL Server	Persistência via mssql
+Autenticação	JWT	Tokens
 Segurança	Bcrypt	Hash de senhas
 Configuração	Dotenv	Variáveis de ambiente
-Desenvolvimento	ts-node-dev	Reload automático
+Dev	ts-node-dev	Reload automático
 📂 Estrutura do Projeto
 pizzaria-backend/
+│
 ├── src/
 │   ├── config/
 │   │   └── db.ts                 # Conexão com o banco
@@ -59,12 +75,13 @@ pizzaria-backend/
 │   │   ├── clientesRoutes.ts
 │   │   ├── loginRoutes.ts
 │   │   └── ...                   # Rotas adicionais
-│   └── server.ts                 # Entry point da API
-├── .env                          # Variáveis de ambiente
+│   └── server.ts                 # Servidor principal
+│
+├── .env
 ├── package.json
 └── tsconfig.json
 
-🚀 Como Executar o Projeto
+🚀 Como Executar
 ✔ Pré-requisitos
 
 Node.js 18+
@@ -73,37 +90,37 @@ SQL Server instalado e rodando
 
 Git
 
-📥 Instalação e Setup
-1. Clone o repositório
+📥 Instalação
 git clone https://github.com/Mauricio-Nonato/Trabalho-Type-Edu.git
 cd Trabalho-Type-Edu
 
-2. Instale as dependências
+
+Instale as dependências:
+
 npm install
 npm i -D typescript ts-node @types/node
 npm install mssql
 
-
-Opcional para desenvolvimento: extensão Live Server
-
 ▶ Rodando o projeto
 
-Entre na pasta principal do backend:
+Entre na pasta:
 
 cd pizzaria-backend
 
 
-Crie o administrador:
+Criar administrador padrão:
 
-npx ts-node .\src\criarAdmin.ts
-
-
-Inicie o servidor:
-
-npx ts-node .\src\server.ts
+npx ts-node src/criarAdmin.ts
 
 
-Rode o front executando index.html com o Live Server.
+Iniciar o servidor:
+
+npx ts-node src/server.ts
+
+
+Executar o front-end:
+
+Abra index.html com a extensão Live Server.
 
 🔧 Variáveis de Ambiente (.env)
 DB_HOST=localhost
@@ -113,17 +130,14 @@ DB_NAME=pizzaria
 PORT=3000
 SECRET_KEY=suaChaveSecretaParaJWT
 
-💾 Schema do Banco de Dados (SQL Server)
+💾 Script SQL — Banco de Dados
 CREATE DATABASE [pizzaria];
 GO
 
 USE [pizzaria];
 GO
 
--- =============================================
--- CRIAÇÃO DAS TABELAS
--- =============================================
-
+-- TABELA CLIENTES
 CREATE TABLE Clientes (
     id INT PRIMARY KEY IDENTITY(1,1),
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -138,6 +152,7 @@ CREATE TABLE Clientes (
     uf VARCHAR(2)
 );
 
+-- PROPRIETÁRIOS
 CREATE TABLE Proprietarios (
     id INT PRIMARY KEY IDENTITY(1,1),
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -146,6 +161,7 @@ CREATE TABLE Proprietarios (
     email VARCHAR(100)
 );
 
+-- PRODUTOS
 CREATE TABLE Produtos (
     cod_produto INT PRIMARY KEY IDENTITY(1,1),
     tipo_produto VARCHAR(50) NOT NULL,
@@ -159,6 +175,7 @@ CREATE TABLE Produtos (
     preco_broto DECIMAL(10, 2) DEFAULT 0
 );
 
+-- PEDIDOS
 CREATE TABLE Pedidos (
     cod_pedido INT PRIMARY KEY IDENTITY(1,1),
     username_cliente VARCHAR(50) NOT NULL,
@@ -171,6 +188,7 @@ CREATE TABLE Pedidos (
     preco_total DECIMAL(10, 2)
 );
 
+-- ITENS DO PEDIDO
 CREATE TABLE ItensPedidos (
     cod_item INT PRIMARY KEY IDENTITY(1,1),
     cod_pedido INT NOT NULL,
@@ -186,9 +204,6 @@ CREATE TABLE ItensPedidos (
 );
 GO
 
--- =============================================
--- DADOS INICIAIS (SEED)
--- =============================================
-
+-- SEED
 INSERT INTO Proprietarios (username, password_hash, nome, email)
 VALUES ('admin', '$2b$10$89.6.89.6.89.6.89.6.89.6.89.6.89.6.89.6.89.6.89.', 'Dono da Pizzaria', 'admin@pizzaria.com');
