@@ -1,48 +1,111 @@
-Trabalho-Type-Edu: API de Pedidos de Pizzaria
+:
 
-📝 Descrição do ProjetoO Trabalho-Type-Edu é uma API RESTful desenvolvida para simular o sistema de gerenciamento de pedidos de uma pizzaria. Este projeto lida com a autenticação de clientes e proprietários, o cadastro de produtos (cardápio) e o ciclo de vida completo de um pedido, desde sua criação até sua conclusão.Foi desenvolvido como [Mencione a finalidade: Trabalho Acadêmico, Projeto Pessoal, etc.] focado em Node.js, TypeScript e Express.
+🍕 Trabalho-Type-Edu: API de Pedidos de Pizzaria
+📝 Descrição do Projeto
 
-✨ Funcionalidades da APIA API oferece os seguintes recursos:Autenticação e Usuários: Cadastro, Login e Atualização de dados para Clientes e Proprietários (Admin).Cardápio (Produtos): Operações CRUD (Create, Read, Update, Delete) de produtos por Proprietários e listagem para Clientes.Pedidos: Criação, consulta e atualização do status do pedido (Ex: "Em Preparo", "Concluído").
+O Trabalho-Type-Edu é uma API RESTful desenvolvida para simular o sistema de gerenciamento de pedidos de uma pizzaria.
+A aplicação lida com:
 
-🛠 Tecnologias UtilizadasEste projeto é uma aplicação Backend (API) construída com:CategoriaTecnologiaUso Específico / DependênciaLinguagemTypeScriptGarante tipagem estática e segurança de código.RuntimeNode.jsAmbiente de execução.Framework WebExpressCriação de rotas e manipulação de requisições HTTP.Banco de DadosSQL ServerConexão via biblioteca mssql para gerenciar dados.AutenticaçãoJWT (jsonwebtoken)Criação de tokens de sessão.SegurançaBcrypt (bcrypt)Hashing de senhas para armazenamento seguro.ConfiguraçãoDotenv (dotenv)Gerenciamento de variáveis de ambiente (.env).Desenvolvimentots-node-devExecução e reload automático do servidor.
+Autenticação de clientes e proprietários
 
-📂 Estrutura do ProjetoO código-fonte está organizado da seguinte forma:pizzaria-backend/
+Cadastro e gerenciamento de produtos (cardápio)
+
+Controle completo do ciclo de vida de um pedido, desde a criação até a conclusão
+
+O projeto foi desenvolvido como [Mencione a finalidade: Trabalho Acadêmico, Projeto Pessoal, etc.], utilizando as tecnologias Node.js, TypeScript e Express.
+
+✨ Funcionalidades da API
+🔐 Autenticação e Usuários
+
+Cadastro e Login
+
+Atualização de dados
+
+Perfis: Cliente e Proprietário (Admin)
+
+🍕 Cardápio (Produtos)
+
+CRUD de produtos (somente Proprietários)
+
+Listagem de produtos para Clientes
+
+📦 Pedidos
+
+Criação de pedido
+
+Consulta
+
+Atualização de status (Aberto → Em Preparo → Concluído)
+
+🛠 Tecnologias Utilizadas
+Categoria	Tecnologia	Uso / Dependência
+Linguagem	TypeScript	Tipagem estática e segurança
+Runtime	Node.js	Ambiente de execução
+Framework Web	Express	Criação de rotas e controle HTTP
+Banco de Dados	SQL Server	Persistência via mssql
+Autenticação	JWT (jsonwebtoken)	Tokens de sessão
+Segurança	Bcrypt	Hash de senhas
+Configuração	Dotenv	Variáveis de ambiente
+Desenvolvimento	ts-node-dev	Reload automático
+📂 Estrutura do Projeto
+pizzaria-backend/
 ├── src/
 │   ├── config/
-│   │   └── db.ts           # Configuração de conexão com o banco de dados
+│   │   └── db.ts                 # Conexão com o banco
 │   ├── models/
 │   │   ├── Clientes.ts
-│   │   └── ...             # Outros modelos (Pedido, Produtos, Proprietario, etc.)
+│   │   └── ...                   # Pedido, Produtos, Proprietario etc.
 │   ├── routes/
 │   │   ├── clientesRoutes.ts
 │   │   ├── loginRoutes.ts
-│   │   └── ...             # Outras rotas (Proprietario, Produtos)
-│   └── server.ts           # Ponto de entrada da aplicação (API principal)
-├── .env                    # Variáveis de ambiente
+│   │   └── ...                   # Rotas adicionais
+│   └── server.ts                 # Entry point da API
+├── .env                          # Variáveis de ambiente
 ├── package.json
-└── tsconfig.json           # Configuração de compilação do TypeScript
+└── tsconfig.json
 
+🚀 Como Executar o Projeto
+✔ Pré-requisitos
 
-🚀 Como Executar o Projeto (API)Pré-requisitos de InstalaçãoNode.js: Versão 18 ou superior.SQL Server: Uma instância do banco de dados em execução.Git: Para clonar o repositório.Instalação e SetupClone o repositório:
+Node.js 18+
 
-git 
+SQL Server instalado e rodando
 
-clone https://github.com/Mauricio-Nonato/Trabalho-Type-Edu.git
+Git
 
+📥 Instalação e Setup
+1. Clone o repositório
+git clone https://github.com/Mauricio-Nonato/Trabalho-Type-Edu.git
 cd Trabalho-Type-Edu
 
-Instale as dependências:
+2. Instale as dependências
 npm install
-npm i -D typescript ts-node@types/node
+npm i -D typescript ts-node @types/node
 npm install mssql
-extensão live server
 
-Como rodar:
+
+Opcional para desenvolvimento: extensão Live Server
+
+▶ Rodando o projeto
+
+Entre na pasta principal do backend:
+
 cd pizzaria-backend
-npx ts-node .\src\criarAdmin.ts
-npx ts-node .\src\server.ts
-execute o index.html com live server
 
+
+Crie o administrador:
+
+npx ts-node .\src\criarAdmin.ts
+
+
+Inicie o servidor:
+
+npx ts-node .\src\server.ts
+
+
+Rode o front executando index.html com o Live Server.
+
+🔧 Variáveis de Ambiente (.env)
 DB_HOST=localhost
 DB_USER=seu_usuario_sql
 DB_PASSWORD=sua_senha_sql
@@ -50,7 +113,8 @@ DB_NAME=pizzaria
 PORT=3000
 SECRET_KEY=suaChaveSecretaParaJWT
 
-💾 Schema do Banco de Dados (SQL)Script completo para a criação do banco de dados pizzaria:SQLCREATE DATABASE [pizzaria];
+💾 Schema do Banco de Dados (SQL Server)
+CREATE DATABASE [pizzaria];
 GO
 
 USE [pizzaria];
@@ -84,10 +148,10 @@ CREATE TABLE Proprietarios (
 
 CREATE TABLE Produtos (
     cod_produto INT PRIMARY KEY IDENTITY(1,1),
-    tipo_produto VARCHAR(50) NOT NULL, 
+    tipo_produto VARCHAR(50) NOT NULL,
     nome VARCHAR(100) NOT NULL,
     descricao VARCHAR(MAX),
-    preco DECIMAL(10, 2) NOT NULL, 
+    preco DECIMAL(10, 2) NOT NULL,
     imagem VARCHAR(MAX),
     ativo BIT DEFAULT 1,
     tem_grande BIT DEFAULT 1,
@@ -99,9 +163,9 @@ CREATE TABLE Pedidos (
     cod_pedido INT PRIMARY KEY IDENTITY(1,1),
     username_cliente VARCHAR(50) NOT NULL,
     data_pedido DATETIME DEFAULT GETDATE(),
-    status VARCHAR(50) DEFAULT 'Aberto', 
+    status VARCHAR(50) DEFAULT 'Aberto',
     forma_pagamento VARCHAR(50),
-    tipo_entrega VARCHAR(50), 
+    tipo_entrega VARCHAR(50),
     endereco_entrega VARCHAR(255),
     observacao VARCHAR(255),
     preco_total DECIMAL(10, 2)
@@ -114,9 +178,9 @@ CREATE TABLE ItensPedidos (
     nome_produto VARCHAR(100),
     quantidade INT NOT NULL,
     preco_unitario DECIMAL(10,2),
-    tamanho_selecionado VARCHAR(50), 
+    tamanho_selecionado VARCHAR(50),
     observacao_item VARCHAR(255),
-    
+
     CONSTRAINT FK_Itens_Pedidos FOREIGN KEY (cod_pedido) REFERENCES Pedidos(cod_pedido),
     CONSTRAINT FK_Itens_Produtos FOREIGN KEY (cod_produto) REFERENCES Produtos(cod_produto)
 );
