@@ -1,4 +1,4 @@
-# React + TypeScript + Vite: Projeto Pizzaria
+# TypeScript + Vite: Projeto Pizzaria
 
 Este é um projeto de pizzaria construído com **React** e **TypeScript**, utilizando **Vite** para um setup mínimo com Hot Module Replacement (HMR) e regras de ESLint pré-configuradas. O projeto está dividido em duas partes principais: `pizzaria-backend` (Node.js/TypeScript) e `pizzaria-frontend` (React/TypeScript).
 
@@ -234,3 +234,4 @@ PRINT 'Banco de dados [pizzaria] instalado com sucesso!';
 PRINT 'Login Admin: admin';
 PRINT 'Senha Admin (com hash): admin';
 Você pode salvar o conteúdo acima como README.md no seu projeto.
+
